@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import re
 
+plt.rcParams['pdf.fonttype'] = 42
+
 from utility import *
 
 DATASET_LIST = ['wikivot', 'referendum', 'slashdot', 'wikicon'] + ['p2pgnutella31', 'youtube', 'roadnetCA', 'fb-artist']
@@ -85,7 +87,7 @@ def plot_d_Task(fname, ds, MODE='adj', ERR=False):
     plt.savefig('{}.pdf'.format(fname), bbox_inches='tight')
 def plot_d_q_Task(fdname, fqname, oname, ds, qs, MODE='adj'):
     df1, df2 = pd.read_csv('{}.csv'.format(fdname)), pd.read_csv('{}.csv'.format(fqname))
-    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(6,3), constrained_layout=True)
+    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(6,2.5), constrained_layout=True)
     x11, x12, x21, x22 = df1[df1["algo"]=='RSVD'], df1[df1["algo"]=='RSum'], df2[df2["algo"]=='RSVD'], df2[df2["algo"]=='RSum']
     if MODE=='adj': c, otitle = "obj", "polarity"
     elif MODE=='mod': c, otitle = "obj", "modularity"
@@ -114,15 +116,15 @@ def plot_d_q_Task(fdname, fqname, oname, ds, qs, MODE='adj'):
             rs2 += [r2]
         axs[1].plot(qs, rs1, label=dname, ls='-', color='C{}'.format(j))
         axs[1].plot(qs, rs2, ls='-.', color='C{}'.format(j))
-    axs[0].set_title(otitle)
+    axs[0].set_ylabel(otitle)
     axs[0].set_xlabel("$d$")
-    axs[1].set_title(otitle)
+    axs[1].set_ylabel(otitle)
     axs[1].set_xlabel("$q$")
     plt.savefig('{}.pdf'.format(oname), bbox_inches='tight')
 
 def plot_q_PCA(fname, qs, ERR=False):
     df = pd.read_csv('{}.csv'.format(fname))
-    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(6,3), constrained_layout=True)
+    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(6,2.5), constrained_layout=True)
     x1, x2 = df[df["algo"]=='RSVD'], df[df["algo"]=='RSum']
     for j,dname in enumerate(PCA_LIST):
         tx1, tx2 = x1[x1["dataset"]==dname], x2[x2["dataset"]==dname]
@@ -145,15 +147,15 @@ def plot_q_PCA(fname, qs, ERR=False):
             #axs[0].plot(qs, rs2, ls='-.', color='C{}'.format(j))
         axs[1].plot(qs, ts1, ls='-', color='C{}'.format(j))
         #axs[1].plot(qs, ts2, ls='-.', color='C{}'.format(j))
-    axs[0].set_title("$R(\hat{u})$")
+    axs[0].set_ylabel("$R(\hat{u})$")
     axs[0].set_xlabel("$q$")
-    axs[1].set_title("Speedup")
+    axs[1].set_ylabel("Speedup ratio")
     axs[1].set_xlabel("$q$")
     axs[1].hlines(1, 1, qs[-1], ls='dotted', color='C9', linewidth=1)
     plt.savefig('{}.pdf'.format(fname), bbox_inches='tight')
 def plot_d_PCA(fname, ds, ERR=False):
     df = pd.read_csv('{}.csv'.format(fname))
-    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(6,3), constrained_layout=True)
+    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(6,2.5), constrained_layout=True)
     x1, x2 = df[df["algo"]=='RSVD'], df[df["algo"]=='RSum']
     for j,dname in enumerate(PCA_LIST):
         tx1, tx2 = x1[x1["dataset"]==dname], x2[x2["dataset"]==dname]
@@ -176,9 +178,9 @@ def plot_d_PCA(fname, ds, ERR=False):
             #axs[0].plot(ds, rs2, ls='-.', color='C{}'.format(j))
         axs[1].plot(ds, ts1, ls='-', color='C{}'.format(j))
         #axs[1].plot(ds, ts2, ls='-.', color='C{}'.format(j))
-    axs[0].set_title("$R(\hat{u})$")
+    axs[0].set_ylabel("$R(\hat{u})$")
     axs[0].set_xlabel("$d$")
-    axs[1].set_title("Speedup")
+    axs[1].set_ylabel("Speedup ratio")
     axs[1].set_xlabel("$d$")
     axs[1].hlines(1, 1, ds[-1], ls='dotted', color='C9', linewidth=1)
     plt.savefig('{}.pdf'.format(fname), bbox_inches='tight')
@@ -191,7 +193,8 @@ def plot_SyntheticEigvals(N):
         print("kappa={:.4f}".format(np.sum(np.array(Sigma)**3) / np.sum(np.abs(np.array(Sigma)**3))))
     plt.xlabel('$i$')
     plt.yscale('symlog', linthreshy=0.01)
-    plt.title('$\lambda_i$')
+    plt.ylabel('$\lambda_i$')
+    #plt.legend(loc='center left', bbox_to_anchor=(-0.75, -0.5), fancybox=True, shadow=True, ncol=4)
     plt.savefig('synthetic-eigvals_n{}.pdf'.format(N), bbox_inches='tight')
 
 plot_d_q_Task("SCG-d_q1-R", "SCG-q_d10-R", "SCG-real_dq", [1,5,10,25,50], [1,2,4,8,16], MODE='adj')
